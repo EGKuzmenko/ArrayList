@@ -5,18 +5,40 @@ import java.util.ListIterator;
 
 public class ArrayList<T> implements List<T> {
 
+    private T[] m;
+
+    private int size;
+
+    public ArrayList(final int initialCapacity) {
+        if (initialCapacity < 0) {
+            throw new IllegalArgumentException();
+        }
+        m =(T[]) new Object[initialCapacity];
+        size = 0;
+    }
+
+    public ArrayList() {
+        m =(T[]) new Object[10];
+        size = 0;
+    }
+
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.size() == 0;
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(final Object o) {
+        for (int i = 0; i < this.size(); i++) {
+            if (m[i].equals(o)) {
+                return true;
+            }
+        }
         return false;
     }
 
