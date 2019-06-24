@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new ElementsIterator();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) {
+    public T get(final int index) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
@@ -169,7 +169,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T set(int index, T element) {
+    public T set(final int index,final T element) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
@@ -197,7 +197,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) {
+    public T remove(final int index) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
@@ -209,7 +209,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(final Object o) {
         for (int i = 0; i < this.size; i++) {
             if (m[i].equals(o)) {
                 return i;
@@ -219,7 +219,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public int lastIndexOf(Object o) {
+    public int lastIndexOf(final Object o) {
         for (int i = this.size - 1; i >= 0; i--) {
             if (m[i].equals(o)) {
                 return i;
@@ -230,16 +230,108 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        return null;
+        return new ElementsIterator();
     }
 
     @Override
-    public ListIterator<T> listIterator(int index) {
-        return null;
+    public ListIterator<T> listIterator(final int index) {
+        return new ElementsIterator(index);
     }
 
     @Override
-    public List<T> subList(int fromIndex, int toIndex) {
+    public List<T> subList(final int fromIndex, final int toIndex) {
         return null;
+    }
+
+    private class ElementsIterator implements ListIterator<T> {
+
+        private static final int LAST_IS_NOT_SET = -1;
+
+        private int index;
+
+        private int lastIndex = LAST_IS_NOT_SET;
+
+        public ElementsIterator() {
+            this(0);
+        }
+
+        public ElementsIterator(final int index) {
+            this.index = index;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return ArrayList.this.size() > index;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            lastIndex = index++;
+            return ArrayList.this.m[lastIndex];
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return index != 0;
+        }
+
+        @Override
+        public T previous() {
+            if (hasPrevious() || ArrayList.this.size() == 0) {
+                throw new NoSuchElementException();
+            }
+            final int prevIndex = previousIndex();
+            lastIndex = prevIndex;
+            index--;
+            return ArrayList.this.m[lastIndex];
+        }
+
+        @Override
+        public int nextIndex() {
+            return ArrayList.this.size() == index ? ArrayList.this.size() : index;
+        }
+
+        @Override
+        public int previousIndex() {
+            if (index == 0) return LAST_IS_NOT_SET;
+            return index - 1;
+        }
+
+        @Override
+        public void remove() {
+            if (lastIndex == LAST_IS_NOT_SET){
+                throw new IllegalStateException();
+            }
+            ArrayList.this.remove(lastIndex);
+            index--;
+            lastIndex = LAST_IS_NOT_SET;
+        }
+
+        @Override
+        public void set(final T t) {
+            if (lastIndex == LAST_IS_NOT_SET) {
+                throw new IllegalStateException();
+            }
+            ArrayList.this.set(lastIndex, t);
+        }
+
+        @Override
+        public void add(final T t) {
+            if (hasNext() || hasPrevious()) {
+                final int i = index;
+                ArrayList.this.add(i, t);
+                lastIndex = -1;
+                index = i + 1;
+            } else {
+                final int i = index;
+                ArrayList.this.add(t);
+                lastIndex = -1;
+                index = i + 1;
+            }
+        }
+
     }
 }
