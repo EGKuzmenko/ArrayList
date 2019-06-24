@@ -1,7 +1,4 @@
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class ArrayList<T> implements List<T> {
 
@@ -34,7 +31,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean contains(final Object o) {
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < this.size; i++) {
             if (m[i].equals(o)) {
                 return true;
             }
@@ -49,52 +46,117 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        final T[] newM =(T[]) new Object[this.size];
+        System.arraycopy(m, 0, newM, 0, this.size);
+        return newM;
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) {
-        return null;
+    public <T1> T1[] toArray(final T1[] a) {
+        if (a == null) {
+            throw new NullPointerException();
+        }
+
+        if (a.length < this.size) {
+            return (T1[]) Arrays.copyOf(m, this.size(), a.getClass());
+        }
+
+        System.arraycopy(m, 0, a, 0, this.size);
+
+        if (a.length > this.size) {
+            a[this.size] = null;
+        }
+        return a;
     }
 
     @Override
-    public boolean add(T t) {
+    public boolean add(final T t) {
+        if (m.length == this.size) {
+            final T[] oldM = m;
+            m = (T[]) new Object[this.size * 2];
+            System.arraycopy(oldM, 0, m, 0, oldM.length);
+        }
+        m[this.size++] = t;
+        return true;
+    }
+
+    @Override
+    public boolean remove(final Object o) {
+        for (int i = 0; i < this.size; i++) {
+            if (m[i].equals(o)) {
+                this.remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean remove(Object o) {
-        return false;
+    public boolean containsAll(final Collection<?> c) {
+        for (final Object item : this) {
+            if (!c.contains(item)) return false;
+        }
+        return true;
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
-        return false;
+    public boolean addAll(final Collection<? extends T> c) {
+        if (c == null) {
+            throw new NullPointerException();
+        }
+        for (final T item : c) {
+            this.add(item);
+        }
+        return true;
     }
 
     @Override
-    public boolean addAll(Collection<? extends T> c) {
-        return false;
+    public boolean addAll(final int index, final Collection<? extends T> c) {
+        if (index < 0 || index > this.size)
+            throw new IndexOutOfBoundsException();
+        if (c == null)
+            throw new NullPointerException();
+
+        for (final T item : c) {
+            add(index, item);
+        }
+
+        return true;
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
+    public boolean removeAll(final Collection<?> c) {
+        if (c == null) {
+            throw new NullPointerException();
+        }
+
+        for (final Object item : c) {
+            if (this.contains(item)) {
+                remove(item);
+            }
+        }
+        return true;
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
-        return false;
-    }
+    public boolean retainAll(final Collection<?> c) {
+        if (c == null) {
+            throw new NullPointerException();
+        }
 
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        return false;
+        for (final Object item : this) {
+            if (!c.contains(item)) {
+                this.remove(item);
+            }
+        }
+
+        return true;
     }
 
     @Override
     public void clear() {
-
+        m =(T[]) new Object[1];
+        size = 0;
     }
 
     @Override
@@ -108,13 +170,33 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(int index, T element) {
+    public void add(final int index, final T element) {
+        if (index < 0 || index > this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (m.length == this.size) {
+            final T[] oldM = m;
+            m =(T[]) new Object[this.size * 2];
+            System.arraycopy(oldM, 0, m, 0, oldM.length);
+        }
+
+        System.arraycopy(m, index, m, index + 1, this.size - index);
+        m[index] = element;
+        size++;
 
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index > this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+        final T element = m[index];
+        if (index != this.size - 1)
+            System.arraycopy(m, index + 1, m, index, this.size - index - 1);
+        size--;
+        return element;
     }
 
     @Override
