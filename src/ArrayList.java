@@ -112,7 +112,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean addAll(final int index, final Collection<? extends T> c) {
-        if (index < 0 || index > this.size)
+        if (index < 0 || index >= this.size)
             throw new IndexOutOfBoundsException();
         if (c == null)
             throw new NullPointerException();
@@ -161,17 +161,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return m[index];
     }
 
     @Override
     public T set(int index, T element) {
-        return null;
+        if (index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+        final T prevElement = m[index];
+        m[index] = element;
+        return prevElement;
     }
 
     @Override
     public void add(final int index, final T element) {
-        if (index < 0 || index > this.size) {
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -189,7 +198,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > this.size) {
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
         final T element = m[index];
@@ -201,12 +210,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        for (int i = 0; i < this.size; i++) {
+            if (m[i].equals(o)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        for (int i = this.size - 1; i >= 0; i--) {
+            if (m[i].equals(o)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
