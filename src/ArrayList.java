@@ -204,7 +204,7 @@ public class ArrayList<T> implements List<T> {
         final T element = m[index];
         if (index != this.size - 1)
             System.arraycopy(m, index + 1, m, index, this.size - index - 1);
-        size--;
+        m[--size] = null;
         return element;
     }
 
@@ -321,8 +321,8 @@ public class ArrayList<T> implements List<T> {
         @Override
         public void add(final T t) {
             ArrayList.this.add(index, t);
-            lastIndex = LAST_IS_NOT_SET;
             index++;
+            lastIndex = LAST_IS_NOT_SET;
         }
 
     }
