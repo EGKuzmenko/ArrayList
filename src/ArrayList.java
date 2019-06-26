@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        final T[] newM =(T[]) new Object[this.size];
+        final T[] newM = (T[]) new Object[this.size];
         System.arraycopy(m, 0, newM, 0, this.size);
         return newM;
     }
@@ -320,17 +320,9 @@ public class ArrayList<T> implements List<T> {
 
         @Override
         public void add(final T t) {
-            if (hasNext() || hasPrevious()) {
-                final int i = index;
-                ArrayList.this.add(i, t);
-                lastIndex = -1;
-                index = i + 1;
-            } else {
-                final int i = index;
-                ArrayList.this.add(t);
-                lastIndex = -1;
-                index = i + 1;
-            }
+            ArrayList.this.add(index, t);
+            lastIndex = LAST_IS_NOT_SET;
+            index++;
         }
 
     }
