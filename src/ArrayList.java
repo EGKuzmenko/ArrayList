@@ -131,9 +131,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         for (final Object item : c) {
-            if (this.contains(item)) {
                 remove(item);
-            }
         }
         return true;
     }
