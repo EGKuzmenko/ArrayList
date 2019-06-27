@@ -343,4 +343,124 @@ public class ArrayListTest {
 
     }
 
+    @Test
+    public void testHasNext() {
+
+        testInstance.add(1);
+        assertTrue(listIterator.hasNext());
+        assertEquals((Integer)1, listIterator.next());
+        assertFalse(listIterator.hasNext());
+
+    }
+
+    @Test
+    public void testNext() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        try {
+            assertEquals("Expected 1", (Integer)1, listIterator.next());
+            assertEquals("Expected 2", (Integer)2, listIterator.next());
+            listIterator.next();
+            fail("Expected NoSuchElementException");
+        } catch (final NoSuchElementException e) {}
+
+    }
+
+    @Test
+    public void testHasPrevious() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+        testInstance.add(3);
+
+        assertFalse(listIterator.hasPrevious());
+        listIterator.next();
+        assertTrue(listIterator.hasPrevious());
+        listIterator.next();
+        assertTrue(listIterator.hasPrevious());
+        listIterator.next();
+        assertTrue(listIterator.hasPrevious());
+
+    }
+
+    @Test
+    public void testPreviousWhenListSize0() {
+
+
+        try {
+            listIterator.previous();
+            fail("Expected NoSuchElementException");
+        } catch (final NoSuchElementException e) {}
+
+    }
+
+    @Test
+    public void testPreviousBeforeNext() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        try {
+            listIterator.previous();
+            fail("Expected NoSuchElementException");
+        } catch (final NoSuchElementException e) {}
+
+    }
+
+    @Test
+    public void testPrevious() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        listIterator.next();
+        listIterator.next();
+
+        assertEquals((Integer)2, listIterator.previous());
+        assertEquals((Integer)1, listIterator.previous());
+
+    }
+
+    @Test
+    public void testNextIndex() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+        testInstance.add(3);
+
+        assertEquals(0, listIterator.nextIndex());
+        listIterator.next();
+        assertEquals(1, listIterator.nextIndex());
+        listIterator.next();
+        assertEquals(2, listIterator.nextIndex());
+        listIterator.next();
+
+    }
+
+    @Test
+    public void testPreviousIndex() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        assertEquals(-1, listIterator.previousIndex());
+        listIterator.next();
+        assertEquals(0, listIterator.previousIndex());
+
+    }
+
+    @Test
+    public void testRemoveBeforeNextOrPrevious() {
+
+        testInstance.add(1);
+
+        try {
+            listIterator.remove();
+            fail("Expected IllegalStateException");
+        } catch (final IllegalStateException e) {}
+
+    }
+
 }
