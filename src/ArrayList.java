@@ -278,7 +278,7 @@ public class ArrayList<T> implements List<T> {
 
         @Override
         public T previous() {
-            if (hasPrevious() || ArrayList.this.size() == 0) {
+            if (!hasPrevious() || ArrayList.this.size() == 0) {
                 throw new NoSuchElementException();
             }
             final int prevIndex = previousIndex();
