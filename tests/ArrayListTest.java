@@ -463,4 +463,62 @@ public class ArrayListTest {
 
     }
 
+    @Test
+    public void testRemove() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+        testInstance.add(3);
+
+        assertEquals((Integer)1, listIterator.next());
+        assertEquals((Integer)2, listIterator.next());
+        listIterator.remove();
+        assertEquals(2, testInstance.size());
+        assertEquals((Integer)3, listIterator.next());
+        assertEquals((Integer)3, listIterator.previous());
+        listIterator.remove();
+        assertEquals(1, testInstance.size());
+        assertEquals((Integer) 1, testInstance.get(0));
+
+    }
+
+    @Test
+    public void testSetListIterator() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        listIterator.next();
+        listIterator.set(5);
+        assertEquals((Integer)5, testInstance.get(0));
+
+    }
+
+    @Test
+    public void testSetWhenLastIsNotSet() {
+
+        testInstance.add(1);
+        testInstance.add(2);
+
+        try {
+            listIterator.set(5);
+            fail("Expected IllegalStateException");
+        } catch (final IllegalStateException e) {}
+
+    }
+
+    @Test
+    public void testAddListIterator() {
+
+        testInstance.add(1);
+        listIterator.add(2);
+
+        assertFalse(testInstance.isEmpty());
+        assertEquals(2, testInstance.size());
+        assertEquals((Integer)2, testInstance.get(0));
+        assertEquals((Integer)1, testInstance.get(1));
+
+
+    }
+
 }
