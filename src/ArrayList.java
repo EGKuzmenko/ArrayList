@@ -2,6 +2,8 @@ import java.util.*;
 
 public class ArrayList<T> implements List<T> {
 
+    private final static int DEFAULT_CAPACITY = 10;
+
     private T[] m;
 
     private int size;
@@ -15,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList() {
-        m =(T[]) new Object[10];
+        m =(T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -73,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     public boolean add(final T t) {
         if (m.length == this.size) {
             final T[] oldM = m;
-            m = (T[]) new Object[this.size * 2];
+            m = (T[]) new Object[(this.size * 3) / 2 + 1];
             System.arraycopy(oldM, 0, m, 0, oldM.length);
         }
         m[this.size++] = t;
@@ -238,7 +240,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public List<T> subList(final int fromIndex, final int toIndex) {
-        return null;
+        if (fromIndex < 0 || toIndex >= size || fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        int capacity = (toIndex - fromIndex) + 1;
+        ArrayList<T> res = new ArrayList<>(capacity);
+
+        for (int i = fromIndex; i <= toIndex; i++) {
+            res.add(m[i]);
+        }
+
+        return res;
     }
 
     private class ElementsIterator implements ListIterator<T> {
