@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -518,6 +519,44 @@ public class ArrayListTest {
         assertEquals((Integer)2, testInstance.get(0));
         assertEquals((Integer)1, testInstance.get(1));
 
+
+    }
+
+    @Test
+    public void testSubList() {
+
+
+        for (int i = 0; i < 7; i++) {
+            testInstance.add(i);
+        }
+
+        assertFalse(testInstance.subList(1, 5).isEmpty());
+        assertEquals(5, testInstance.subList(1, 5).size());
+        assertEquals((Integer) 3, testInstance.subList(1, 5).get(2));
+
+    }
+
+    @Test
+    public void testSubListWhenIndexOutOfRange() {
+
+        for (int i = 0; i < 4; i++) {
+            testInstance.add(i);
+        }
+
+        try {
+            testInstance.subList(0, 5);
+            fail("Expected IndexOutOfBoundsException");
+        } catch (final IndexOutOfBoundsException e) {}
+
+        try {
+            testInstance.subList(-1, 3);
+            fail("Expected IndexOutOfBoundsException");
+        } catch (final  IndexOutOfBoundsException e) {}
+
+        try {
+            testInstance.subList(2, 1);
+            fail("Expected IndexOutOfBoundsException");
+        } catch (final  IndexOutOfBoundsException e) {}
 
     }
 
